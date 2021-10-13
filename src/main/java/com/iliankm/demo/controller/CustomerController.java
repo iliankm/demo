@@ -1,5 +1,6 @@
 package com.iliankm.demo.controller;
 
+import com.iliankm.demo.converter.api.ConverterService;
 import com.iliankm.demo.dto.CreateUpdateCustomerDto;
 import com.iliankm.demo.dto.CustomerDto;
 import com.iliankm.demo.entity.Customer;
@@ -27,16 +28,19 @@ class CustomerController {
 
     private final CustomerService customerService;
     private final ModelMapper modelMapper;
+    private final ConverterService converterService;
 
     /**
      * Autowired constructor for DI.
      *
      * @param customerService {@link CustomerService} dependency
      * @param modelMapper     {@link ModelMapper} dependency
+     * @param converterService  {@link ConverterService} dependency
      */
-    CustomerController(CustomerService customerService, ModelMapper modelMapper) {
+    CustomerController(CustomerService customerService, ModelMapper modelMapper, ConverterService converterService) {
         this.customerService = customerService;
         this.modelMapper = modelMapper;
+        this.converterService = converterService;
     }
 
     /**
@@ -48,7 +52,7 @@ class CustomerController {
     @GetMapping("{id}")
     public ResponseEntity<CustomerDto> getById(@PathVariable("id") Long customerId) {
         return customerService.findById(customerId)
-                .map(c -> ResponseEntity.ok().body(modelMapper.map(c, CustomerDto.class)))
+                .map(c -> ResponseEntity.ok().body(converterService.convert(c, CustomerDto.class)))
                 .orElse(ResponseEntity.notFound().build());
     }
 
@@ -60,7 +64,7 @@ class CustomerController {
     @GetMapping
     public ResponseEntity<List<CustomerDto>> getAll() {
         return ResponseEntity.ok().body(customerService.findAll()
-                .stream().map(c -> modelMapper.map(c, CustomerDto.class))
+                .stream().map(c -> converterService.convert(c, CustomerDto.class))
                 .collect(Collectors.toList()));
     }
 

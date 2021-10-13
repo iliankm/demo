@@ -1,6 +1,8 @@
 package com.iliankm.demo.controller;
 
 import com.iliankm.demo.configuration.ModelMapperConfiguration;
+import com.iliankm.demo.converter.api.ConverterService;
+import com.iliankm.demo.dto.CustomerDto;
 import com.iliankm.demo.entity.Customer;
 import com.iliankm.demo.entity.repository.service.customer.CustomerService;
 import lombok.SneakyThrows;
@@ -26,6 +28,8 @@ class CustomerControllerTest {
 
     @MockBean
     private CustomerService customerService;
+    @MockBean
+    private ConverterService converterService;
 
     @Autowired
     private MockMvc mvc;
@@ -39,6 +43,7 @@ class CustomerControllerTest {
         customer.setFirstName("John");
         customer.setLastName("Doe");
         given(customerService.findById(1L)).willReturn(Optional.of(customer));
+        given(converterService.convert(customer, CustomerDto.class)).willReturn(CustomerDto.builder().id(1L).build());
 
         // when & then
         mvc.perform(get("/api/v1/customers/1"))
