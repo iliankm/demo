@@ -4,9 +4,9 @@ import com.iliankm.demo.entity.Customer;
 import com.iliankm.demo.entity.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import javax.transaction.Transactional;
 
 /**
  * Customer service implementation.

@@ -81,6 +81,13 @@ class CustomerController {
                 HttpStatus.CREATED);
     }
 
+    /**
+     * Updates customer.
+     *
+     * @param customerId customer id
+     * @param createUpdateCustomerData customer update data
+     * @return the id of the updated customer
+     */
     @PutMapping("{id}")
     public ResponseEntity<String> update(@PathVariable("id") Long customerId,
                                          @RequestBody CreateUpdateCustomerDto createUpdateCustomerData) {

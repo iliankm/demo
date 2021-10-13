@@ -13,7 +13,7 @@ public interface SourceAndDestination<S, D> {
     /**
      * Determines the class of the source type.
      *
-     * @return the class of <S>
+     * @return the class of S type
      */
     default Class<S> getSourceType() {
         return (Class<S>) ((ParameterizedType) getClass().getGenericInterfaces()[0]).getActualTypeArguments()[0];
@@ -22,7 +22,7 @@ public interface SourceAndDestination<S, D> {
     /**
      * Determines the class of the destination type.
      *
-     * @return the class of <D>
+     * @return the class of D type
      */
     default Class<D> getDestinationType() {
         return (Class<D>) ((ParameterizedType) getClass().getGenericInterfaces()[0]).getActualTypeArguments()[1];

@@ -1,16 +1,17 @@
 package com.iliankm.demo.entity.repository.service.customer;
 
 import com.iliankm.demo.entity.Customer;
+import com.sun.istack.NotNull;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
+import javax.validation.Valid;
 
 /**
  * Customer service interface.
  */
 public interface CustomerService {
+
     /**
      * Finds customer by its id.
      *
