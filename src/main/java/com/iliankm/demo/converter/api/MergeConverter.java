@@ -11,7 +11,7 @@ public interface MergeConverter<S, D> extends SourceAndDestination<S, D> {
     /**
      * Converts by merging from source to destination objects.
      *
-     * @param source the source object
+     * @param source      the source object
      * @param destination the destination object to be merged
      * @return the merged destination object that is passed as an argument
      */

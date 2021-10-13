@@ -33,9 +33,9 @@ class CustomerController {
     /**
      * Autowired constructor for DI.
      *
-     * @param customerService {@link CustomerService} dependency
-     * @param modelMapper     {@link ModelMapper} dependency
-     * @param converterService  {@link ConverterService} dependency
+     * @param customerService  {@link CustomerService} dependency
+     * @param modelMapper      {@link ModelMapper} dependency
+     * @param converterService {@link ConverterService} dependency
      */
     CustomerController(CustomerService customerService, ModelMapper modelMapper, ConverterService converterService) {
         this.customerService = customerService;
@@ -84,7 +84,7 @@ class CustomerController {
     /**
      * Updates customer.
      *
-     * @param customerId customer id
+     * @param customerId               customer id
      * @param createUpdateCustomerData customer update data
      * @return the id of the updated customer
      */

@@ -21,7 +21,7 @@ class ConverterServiceImpl implements ConverterService {
     /**
      * Constructor with dependencies.
      *
-     * @param converters all {@link Converter} beans
+     * @param converters      all {@link Converter} beans
      * @param mergeConverters all {@link MergeConverter} beans
      */
     ConverterServiceImpl(List<Converter<?, ?>> converters, List<MergeConverter<?, ?>> mergeConverters) {
