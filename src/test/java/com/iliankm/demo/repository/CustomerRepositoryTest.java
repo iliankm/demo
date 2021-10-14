@@ -7,6 +7,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
@@ -26,9 +27,20 @@ class CustomerRepositoryTest {
     private CustomerRepository customerRepository;
 
     @Test
+    @Sql("/create-customer.sql")
+    void shouldFindById() {
+        // given & when
+        var customer = customerRepository.findById(1L);
+
+        // then
+        assertThat(customer.isPresent(), is(true));
+        assertThat(customer.get().getId(), is(1L));
+    }
+
+    @Test
     void shouldSave() {
         // given
-        Customer customer = customer("John", "Doe");
+        var customer = customer("John", "Doe");
 
         // when
         Long id = customerRepository.saveAndFlush(customer).getId();
@@ -45,9 +57,9 @@ class CustomerRepositoryTest {
     }
 
     private static Stream<Arguments> shouldFailValidationTestCases() {
-        final char[] longNameArr = new char[101];
+        final var longNameArr = new char[101];
         Arrays.fill(longNameArr, 'A');
-        final String longName = new String(longNameArr);
+        final var longName = new String(longNameArr);
         return Stream.of(
                 Arguments.of(new Customer()),
                 Arguments.of(customer("", "Doe")),
@@ -62,7 +74,7 @@ class CustomerRepositoryTest {
     }
 
     private static Customer customer(String firstName, String lastName) {
-        final Customer customer = new Customer();
+        final var customer = new Customer();
         customer.setFirstName(firstName);
         customer.setLastName(lastName);
         return customer;
