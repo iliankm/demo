@@ -4,7 +4,7 @@ import com.iliankm.demo.configuration.ModelMapperConfiguration;
 import com.iliankm.demo.converter.api.ConverterService;
 import com.iliankm.demo.dto.CustomerDto;
 import com.iliankm.demo.entity.Customer;
-import com.iliankm.demo.entity.repository.service.customer.CustomerService;
+import com.iliankm.demo.service.customer.CustomerService;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

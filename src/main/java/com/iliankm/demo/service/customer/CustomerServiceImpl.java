@@ -1,4 +1,4 @@
-package com.iliankm.demo.entity.repository.service.customer;
+package com.iliankm.demo.service.customer;
 
 import com.iliankm.demo.entity.Customer;
 import com.iliankm.demo.entity.repository.CustomerRepository;

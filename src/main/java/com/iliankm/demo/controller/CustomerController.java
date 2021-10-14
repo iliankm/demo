@@ -4,7 +4,7 @@ import com.iliankm.demo.converter.api.ConverterService;
 import com.iliankm.demo.dto.CreateUpdateCustomerDto;
 import com.iliankm.demo.dto.CustomerDto;
 import com.iliankm.demo.entity.Customer;
-import com.iliankm.demo.entity.repository.service.customer.CustomerService;
+import com.iliankm.demo.service.customer.CustomerService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
