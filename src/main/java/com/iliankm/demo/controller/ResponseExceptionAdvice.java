@@ -1,6 +1,5 @@
 package com.iliankm.demo.controller;
 
-import lombok.SneakyThrows;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,7 +19,6 @@ class ResponseExceptionAdvice extends ResponseEntityExceptionHandler {
      * @param ex the {@link ValidationException}
      */
     @ExceptionHandler(ValidationException.class)
-    @SneakyThrows
     public ResponseEntity<String> handleValidationException(ValidationException ex) {
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
