@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  * Configuration for persistence.
  */
 @Configuration
-@EnableJpaRepositories(basePackages = "com.iliankm.demo.entity.repository")
+@EnableJpaRepositories(basePackages = "com.iliankm.demo.repository")
 class PersistenceConfiguration {
 }
