@@ -1,4 +1,4 @@
-package com.iliankm.demo.entity.repository;
+package com.iliankm.demo.repository;
 
 import com.iliankm.demo.entity.Customer;
 import org.junit.jupiter.api.Test;
@@ -8,9 +8,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import javax.validation.ConstraintViolationException;
 import java.util.Arrays;
 import java.util.stream.Stream;
+import javax.validation.ConstraintViolationException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;

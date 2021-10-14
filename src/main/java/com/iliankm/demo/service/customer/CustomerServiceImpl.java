@@ -1,7 +1,7 @@
 package com.iliankm.demo.service.customer;
 
 import com.iliankm.demo.entity.Customer;
-import com.iliankm.demo.entity.repository.CustomerRepository;
+import com.iliankm.demo.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

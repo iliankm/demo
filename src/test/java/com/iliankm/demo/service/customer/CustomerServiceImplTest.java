@@ -1,9 +1,7 @@
 package com.iliankm.demo.service.customer;
 
 import com.iliankm.demo.entity.Customer;
-import com.iliankm.demo.entity.repository.CustomerRepository;
-import com.iliankm.demo.service.customer.CustomerService;
-import com.iliankm.demo.service.customer.CustomerServiceImpl;
+import com.iliankm.demo.repository.CustomerRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;

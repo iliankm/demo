@@ -1,4 +1,4 @@
-package com.iliankm.demo.entity.repository;
+package com.iliankm.demo.repository;
 
 import com.iliankm.demo.entity.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
