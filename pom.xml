@@ -124,6 +124,7 @@
                             <goal>check</goal>
                         </goals>
                         <configuration>
+                            <haltOnFailure>true</haltOnFailure>
                             <excludes>
                                 <exclude>**/dto/**</exclude>
                             </excludes>
@@ -135,14 +136,19 @@
                                     </excludes>
                                     <limits>
                                         <limit>
-                                            <counter>LINE</counter>
+                                            <counter>METHOD</counter>
+                                            <value>MISSEDCOUNT</value>
+                                            <maximum>0</maximum>
+                                        </limit>
+                                        <limit>
+                                            <counter>METHOD</counter>
                                             <value>COVEREDRATIO</value>
                                             <minimum>80%</minimum>
                                         </limit>
                                         <limit>
-                                            <counter>METHOD</counter>
-                                            <value>MISSEDCOUNT</value>
-                                            <maximum>0</maximum>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>80%</minimum>
                                         </limit>
                                     </limits>
                                 </rule>
