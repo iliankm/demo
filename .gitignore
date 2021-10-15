@@ -31,3 +31,4 @@ build/
 
 ### VS Code ###
 .vscode/
+/demo-db.mv.db
