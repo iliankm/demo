@@ -31,31 +31,35 @@ class ConverterServiceImpl implements ConverterService {
 
     @Override
     public <S, D> D convert(S source, Class<D> destinationClass) {
-        final var converter = (Converter<S, D>) converters.get(
-                Pair.of(source.getClass().getName(), destinationClass.getName()));
-        if (converter != null) {
-            return converter.convert(source);
-        } else {
-            throw new IllegalArgumentException("No implementation found for Converter from "
-                    + source.getClass().getName() + " to " + destinationClass.getName());
-        }
+        final Converter<S, D> converter =
+                findConverterOrThrow(converters, source.getClass(), destinationClass);
+        return converter.convert(source);
     }
 
     @Override
     public <S, D> D convert(S source, D destination) {
-        final var mergeConverter = (MergeConverter<S, D>) mergeConverters.get(
-                Pair.of(source.getClass().getName(), destination.getClass().getName()));
-        if (mergeConverter != null) {
-            return mergeConverter.convert(source, destination);
-        } else {
-            throw new IllegalArgumentException("No implementation found for MergeConverter from "
-                    + source.getClass().getName() + " to " + destination.getClass().getName());
-        }
+        final MergeConverter<S, D> mergeConverter =
+                findConverterOrThrow(mergeConverters, source.getClass(), destination.getClass());
+        return mergeConverter.convert(source, destination);
     }
 
     private static <T extends SourceAndDestination<?, ?>> Map<Pair<String, String>, T> mapConverters(
             List<T> converters) {
         return converters.stream().collect(toUnmodifiableMap(
                 c -> Pair.of(c.getSourceType().getName(), c.getDestinationType().getName()), identity()));
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T extends SourceAndDestination<?, ?>> T findConverterOrThrow(
+            Map<Pair<String, String>, ? extends SourceAndDestination<?, ?>> converters,
+            Class<?> sourceClass,
+            Class<?> destinationClass) {
+        final var converter = converters.get(Pair.of(sourceClass.getName(), destinationClass.getName()));
+        if (converter != null) {
+            return (T) converter;
+        } else {
+            throw new IllegalArgumentException("No implementation found for Converter or MergeConverter from "
+                    + sourceClass.getName() + " to " + destinationClass.getName());
+        }
     }
 }
