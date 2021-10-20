@@ -89,7 +89,7 @@ public final class AnnotationUtil {
     }
 
     /**
-     * Adapter of Method object that exposes functionality for getting argument or annotation.
+     * Adapter of {@link Method} object that exposes functionality for getting parameter or annotation.
      */
     public static class MethodAdapter extends AnnotatedElementAdapter<Method> {
 
@@ -114,39 +114,39 @@ public final class AnnotationUtil {
         }
 
         /**
-         * Creates an instance of {@link ArgumentAdapter} that wraps an argument of the method wrapped by this object.
+         * Creates an instance of {@link ParameterAdapter} that wraps a parameter of the method wrapped by this object.
          *
-         * @param argumentIndex the zero based index of the argument
-         * @return instance of {@link ArgumentAdapter}
+         * @param argumentIndex the zero based index of the parameter
+         * @return instance of {@link ParameterAdapter}
          */
-        public ArgumentAdapter argument(int argumentIndex) {
-            return ArgumentAdapter.create(this.getAnnotatedElement(), argumentIndex);
+        public ParameterAdapter parameter(int argumentIndex) {
+            return ParameterAdapter.create(this.getAnnotatedElement(), argumentIndex);
         }
     }
 
     /**
-     * Adapter of Parameter object that exposes functionality for getting annotation.
+     * Adapter of {@link Parameter} object that exposes functionality for getting annotation.
      */
-    public static class ArgumentAdapter extends AnnotatedElementAdapter<Parameter> {
+    public static class ParameterAdapter extends AnnotatedElementAdapter<Parameter> {
 
-        ArgumentAdapter(Parameter parameter) {
+        ParameterAdapter(Parameter parameter) {
             super(parameter);
         }
 
         /**
-         * Factory method for {@link ArgumentAdapter}.
+         * Factory method for {@link ParameterAdapter}.
          *
          * @param method the method
          * @param argumentIndex the argument zero based index
-         * @return {@link ArgumentAdapter} instance
+         * @return {@link ParameterAdapter} instance
          */
-        static ArgumentAdapter create(Method method, int argumentIndex) {
+        static ParameterAdapter create(Method method, int argumentIndex) {
             final var parameters = method.getParameters();
             if (argumentIndex < 0 || argumentIndex > parameters.length - 1) {
                 throw new RuntimeException("No such argument with index: " + argumentIndex + " for method: " + method);
             }
 
-            return new ArgumentAdapter(parameters[argumentIndex]);
+            return new ParameterAdapter(parameters[argumentIndex]);
         }
     }
 }

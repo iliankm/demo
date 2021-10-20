@@ -101,7 +101,7 @@ class CustomerServiceImplTest {
         // given & when
         Valid valid = forClass(CustomerService.class)
                 .method("save", Customer.class)
-                .argument(0)
+                .parameter(0)
                 .annotation(Valid.class);
 
         // then
