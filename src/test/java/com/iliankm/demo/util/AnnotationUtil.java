@@ -1,6 +1,7 @@
 package com.iliankm.demo.util;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
@@ -35,32 +36,44 @@ public final class AnnotationUtil {
      * @param <T> the type of the class
      * @return instance of {@link ForClass}
      */
-    public static <T> ForClass<T> forClass(Class<T> clazz) {
-        return new ForClass<>(clazz);
+    public static <T> ForClass forClass(Class<T> clazz) {
+        return new ForClass(clazz);
     }
 
     /**
-     * Adapter of Class object that exposes functionality to get method or annotation.
-     *
-     * @param <T> the type of the class
+     * Adapter of AnnotatedElement object that exposes functionality for getting annotation.
      */
-    public static class ForClass<T> {
+    public static abstract class AbstractAnnotatedElement<T extends AnnotatedElement> {
 
-        private final Class<T> clazz;
+        private final T annotatedElement;
 
-        ForClass(Class<T> clazz) {
-            this.clazz = clazz;
+        AbstractAnnotatedElement(T annotatedElement) {
+            this.annotatedElement = annotatedElement;
+        }
+
+        T getAnnotatedElement() {
+            return annotatedElement;
         }
 
         /**
-         * Returns annotation applied to the wrapped class for the specified type if present, null otherwise.
+         * Returns annotation applied to the wrapped object for the specified type if present, null otherwise.
          *
          * @param annotationClass the Class object corresponding to the annotation type
          * @param <A> the type of the annotation
-         * @return annotation applied to the wrapped class if present, null otherwise
+         * @return annotation applied to the wrapped object if present, null otherwise
          */
         public <A extends Annotation> A annotation(Class<A> annotationClass) {
-            return clazz.getAnnotation(annotationClass);
+            return annotatedElement.getAnnotation(annotationClass);
+        }
+    }
+
+    /**
+     * Adapter of Class object that exposes functionality for getting method or annotation.
+     */
+    public static class ForClass extends AbstractAnnotatedElement<Class<?>> {
+
+        ForClass(Class<?> clazz) {
+            super(clazz);
         }
 
         /**
@@ -71,34 +84,33 @@ public final class AnnotationUtil {
          * @return instance of {@link AuMethod}
          */
         public AuMethod method(String methodName, Class<?>... argTypes) {
-            return new AuMethod(clazz, methodName, argTypes);
+            return AuMethod.create(this.getAnnotatedElement(), methodName, argTypes);
         }
     }
 
     /**
      * Adapter of Method object that exposes functionality to get argument or annotation.
      */
-    public static class AuMethod {
+    public static class AuMethod extends AbstractAnnotatedElement<Method> {
 
-        private final Method method;
-
-        AuMethod(Class<?> clazz, String methodName, Class<?>... argTypes) {
-            try {
-                this.method = clazz.getMethod(methodName, argTypes);
-            } catch (NoSuchMethodException e) {
-                throw new RuntimeException("No such method: " + clazz.getName() + "#" + methodName);
-            }
+        AuMethod(Method method) {
+            super(method);
         }
 
         /**
-         * Returns annotation applied to the wrapped method for the specified type if present, null otherwise.
+         * Factory method for {@link AuMethod}.
          *
-         * @param annotationClass the Class object corresponding to the annotation type
-         * @param <T> the type of the annotation
-         * @return annotation applied to the wrapped method if present, null otherwise
+         * @param clazz the class
+         * @param methodName the method name
+         * @param argTypes argument types
+         * @return {@link AuMethod} instance
          */
-        public <T extends Annotation> T annotation(Class<T> annotationClass) {
-            return method.getAnnotation(annotationClass);
+        static AuMethod create(Class<?> clazz, String methodName, Class<?>... argTypes) {
+            try {
+                return new AuMethod(clazz.getMethod(methodName, argTypes));
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException("No such method: " + clazz.getName() + "#" + methodName);
+            }
         }
 
         /**
@@ -108,35 +120,33 @@ public final class AnnotationUtil {
          * @return instance of {@link AuArgument}
          */
         public AuArgument argument(int argumentIndex) {
-            return new AuArgument(method, argumentIndex);
+            return AuArgument.create(this.getAnnotatedElement(), argumentIndex);
         }
     }
 
     /**
      * Adapter of Parameter object that exposes functionality to get annotation.
      */
-    public static class AuArgument {
+    public static class AuArgument extends AbstractAnnotatedElement<Parameter> {
 
-        private final Parameter parameter;
+        AuArgument(Parameter parameter) {
+            super(parameter);
+        }
 
-        AuArgument(Method method, int argumentIndex) {
+        /**
+         * Factory method for {@link AuArgument}.
+         *
+         * @param method the method
+         * @param argumentIndex the argument zero based index
+         * @return {@link AuArgument} instance
+         */
+        static AuArgument create(Method method, int argumentIndex) {
             final var parameters = method.getParameters();
             if (argumentIndex < 0 || argumentIndex > parameters.length - 1) {
                 throw new RuntimeException("No such argument with index: " + argumentIndex + " for method: " + method);
             }
 
-            this.parameter = parameters[argumentIndex];
-        }
-
-        /**
-         * Returns annotation applied to the wrapped parameter for the specified type if present, null otherwise.
-         *
-         * @param annotationClass the Class object corresponding to the annotation type
-         * @param <T> the type of the annotation
-         * @return annotation applied to the wrapped parameter if present, null otherwise
-         */
-        public <T extends Annotation> T annotation(Class<T> annotationClass) {
-            return parameter.getAnnotation(annotationClass);
+            return new AuArgument(parameters[argumentIndex]);
         }
     }
 }

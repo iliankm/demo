@@ -78,7 +78,7 @@ class CustomerServiceImplTest {
     @Test
     void theClassShouldHaveServiceAnnotation() {
         // given & when
-        var service = forClass(CustomerServiceImpl.class)
+        Service service = forClass(CustomerServiceImpl.class)
                 .annotation(Service.class);
 
         // then
@@ -88,7 +88,7 @@ class CustomerServiceImplTest {
     @Test
     void saveMethodShouldHaveTransactionalAnnotation() {
         // given & when
-        var transactional = forClass(CustomerServiceImpl.class)
+        Transactional transactional = forClass(CustomerServiceImpl.class)
                 .method("save", Customer.class)
                 .annotation(Transactional.class);
 
@@ -99,7 +99,7 @@ class CustomerServiceImplTest {
     @Test
     void saveMethodShouldHaveValidAnnotationOnTheArgument() {
         // given & when
-        var valid = forClass(CustomerService.class)
+        Valid valid = forClass(CustomerService.class)
                 .method("save", Customer.class)
                 .argument(0)
                 .annotation(Valid.class);
