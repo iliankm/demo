@@ -41,7 +41,7 @@ public final class AnnotationUtil {
     }
 
     /**
-     * Adapter of AnnotatedElement object that exposes functionality for getting annotation.
+     * Adapter of {@link AnnotatedElement} object that exposes functionality for getting annotation applied to it.
      */
     static abstract class AnnotatedElementAdapter<T extends AnnotatedElement> {
 
