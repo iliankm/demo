@@ -30,24 +30,24 @@ public final class AnnotationUtil {
     private AnnotationUtil() {}
 
     /**
-     * Creates an instance of {@link ForClass} that wraps a given class.
+     * Creates an instance of {@link ClassAdapter} that wraps a given class.
      *
      * @param clazz the class to wrap
      * @param <T> the type of the class
-     * @return instance of {@link ForClass}
+     * @return instance of {@link ClassAdapter}
      */
-    public static <T> ForClass forClass(Class<T> clazz) {
-        return new ForClass(clazz);
+    public static <T> ClassAdapter forClass(Class<T> clazz) {
+        return new ClassAdapter(clazz);
     }
 
     /**
      * Adapter of AnnotatedElement object that exposes functionality for getting annotation.
      */
-    public static abstract class AbstractAnnotatedElement<T extends AnnotatedElement> {
+    static abstract class AnnotatedElementAdapter<T extends AnnotatedElement> {
 
         private final T annotatedElement;
 
-        AbstractAnnotatedElement(T annotatedElement) {
+        AnnotatedElementAdapter(T annotatedElement) {
             this.annotatedElement = annotatedElement;
         }
 
@@ -70,83 +70,83 @@ public final class AnnotationUtil {
     /**
      * Adapter of Class object that exposes functionality for getting method or annotation.
      */
-    public static class ForClass extends AbstractAnnotatedElement<Class<?>> {
+    public static class ClassAdapter extends AnnotatedElementAdapter<Class<?>> {
 
-        ForClass(Class<?> clazz) {
+        ClassAdapter(Class<?> clazz) {
             super(clazz);
         }
 
         /**
-         * Creates an instance of {@link AuMethod} that wraps a method of a given class.
+         * Creates an instance of {@link MethodAdapter} that wraps a method of a given class.
          *
          * @param methodName the method name
          * @param argTypes method arguments class objects
-         * @return instance of {@link AuMethod}
+         * @return instance of {@link MethodAdapter}
          */
-        public AuMethod method(String methodName, Class<?>... argTypes) {
-            return AuMethod.create(this.getAnnotatedElement(), methodName, argTypes);
+        public MethodAdapter method(String methodName, Class<?>... argTypes) {
+            return MethodAdapter.create(this.getAnnotatedElement(), methodName, argTypes);
         }
     }
 
     /**
-     * Adapter of Method object that exposes functionality to get argument or annotation.
+     * Adapter of Method object that exposes functionality for getting argument or annotation.
      */
-    public static class AuMethod extends AbstractAnnotatedElement<Method> {
+    public static class MethodAdapter extends AnnotatedElementAdapter<Method> {
 
-        AuMethod(Method method) {
+        MethodAdapter(Method method) {
             super(method);
         }
 
         /**
-         * Factory method for {@link AuMethod}.
+         * Factory method for {@link MethodAdapter}.
          *
          * @param clazz the class
          * @param methodName the method name
          * @param argTypes argument types
-         * @return {@link AuMethod} instance
+         * @return {@link MethodAdapter} instance
          */
-        static AuMethod create(Class<?> clazz, String methodName, Class<?>... argTypes) {
+        static MethodAdapter create(Class<?> clazz, String methodName, Class<?>... argTypes) {
             try {
-                return new AuMethod(clazz.getMethod(methodName, argTypes));
+                return new MethodAdapter(clazz.getMethod(methodName, argTypes));
             } catch (NoSuchMethodException e) {
                 throw new RuntimeException("No such method: " + clazz.getName() + "#" + methodName);
             }
         }
 
         /**
-         * Creates an instance of {@link AuArgument} that wraps an argument of the method wrapped by this object.
+         * Creates an instance of {@link ArgumentAdapter} that wraps an argument of the method wrapped by this object.
          *
          * @param argumentIndex the zero based index of the argument
-         * @return instance of {@link AuArgument}
+         * @return instance of {@link ArgumentAdapter}
          */
-        public AuArgument argument(int argumentIndex) {
-            return AuArgument.create(this.getAnnotatedElement(), argumentIndex);
+        public ArgumentAdapter argument(int argumentIndex) {
+            return ArgumentAdapter.create(this.getAnnotatedElement(), argumentIndex);
         }
     }
 
     /**
-     * Adapter of Parameter object that exposes functionality to get annotation.
+     * Adapter of Parameter object that exposes functionality for getting annotation.
      */
-    public static class AuArgument extends AbstractAnnotatedElement<Parameter> {
+    public static class ArgumentAdapter extends AnnotatedElementAdapter<Parameter> {
 
-        AuArgument(Parameter parameter) {
+        ArgumentAdapter(Parameter parameter) {
             super(parameter);
         }
 
         /**
-         * Factory method for {@link AuArgument}.
+         * Factory method for {@link ArgumentAdapter}.
          *
          * @param method the method
          * @param argumentIndex the argument zero based index
-         * @return {@link AuArgument} instance
+         * @return {@link ArgumentAdapter} instance
          */
-        static AuArgument create(Method method, int argumentIndex) {
+        static ArgumentAdapter create(Method method, int argumentIndex) {
             final var parameters = method.getParameters();
             if (argumentIndex < 0 || argumentIndex > parameters.length - 1) {
                 throw new RuntimeException("No such argument with index: " + argumentIndex + " for method: " + method);
             }
 
-            return new AuArgument(parameters[argumentIndex]);
+            return new ArgumentAdapter(parameters[argumentIndex]);
         }
     }
 }
