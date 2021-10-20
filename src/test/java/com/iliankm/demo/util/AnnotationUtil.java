@@ -84,7 +84,7 @@ public final class AnnotationUtil {
          * @return instance of {@link MethodAdapter}
          */
         public MethodAdapter method(String methodName, Class<?>... argTypes) {
-            return MethodAdapter.create(this.getAnnotatedElement(), methodName, argTypes);
+            return new MethodAdapter(this.getAnnotatedElement(), methodName, argTypes);
         }
     }
 
@@ -93,21 +93,13 @@ public final class AnnotationUtil {
      */
     public static class MethodAdapter extends AnnotatedElementAdapter<Method> {
 
-        MethodAdapter(Method method) {
-            super(method);
+        MethodAdapter(Class<?> clazz, String methodName, Class<?>... argTypes) {
+            super(getMethodOrThrow(clazz, methodName, argTypes));
         }
 
-        /**
-         * Factory method for {@link MethodAdapter}.
-         *
-         * @param clazz the class
-         * @param methodName the method name
-         * @param argTypes argument types
-         * @return {@link MethodAdapter} instance
-         */
-        static MethodAdapter create(Class<?> clazz, String methodName, Class<?>... argTypes) {
+        private static Method getMethodOrThrow(Class<?> clazz, String methodName, Class<?>... argTypes) {
             try {
-                return new MethodAdapter(clazz.getMethod(methodName, argTypes));
+                return clazz.getMethod(methodName, argTypes);
             } catch (NoSuchMethodException e) {
                 throw new RuntimeException("No such method: " + clazz.getName() + "#" + methodName);
             }
@@ -120,7 +112,7 @@ public final class AnnotationUtil {
          * @return instance of {@link ParameterAdapter}
          */
         public ParameterAdapter parameter(int argumentIndex) {
-            return ParameterAdapter.create(this.getAnnotatedElement(), argumentIndex);
+            return new ParameterAdapter(this.getAnnotatedElement(), argumentIndex);
         }
     }
 
@@ -129,24 +121,17 @@ public final class AnnotationUtil {
      */
     public static class ParameterAdapter extends AnnotatedElementAdapter<Parameter> {
 
-        ParameterAdapter(Parameter parameter) {
-            super(parameter);
+        ParameterAdapter(Method method, int argumentIndex) {
+            super(getParameterOrThrow(method, argumentIndex));
         }
 
-        /**
-         * Factory method for {@link ParameterAdapter}.
-         *
-         * @param method the method
-         * @param argumentIndex the argument zero based index
-         * @return {@link ParameterAdapter} instance
-         */
-        static ParameterAdapter create(Method method, int argumentIndex) {
+        private static Parameter getParameterOrThrow(Method method, int argumentIndex) {
             final var parameters = method.getParameters();
             if (argumentIndex < 0 || argumentIndex > parameters.length - 1) {
                 throw new RuntimeException("No such argument with index: " + argumentIndex + " for method: " + method);
             }
 
-            return new ParameterAdapter(parameters[argumentIndex]);
+            return parameters[argumentIndex];
         }
     }
 }
