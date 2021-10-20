@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
 /**
- * Utility around java.lang.reflect for getting annotation applied to a class, method or argument.
+ * Utility around java.lang.reflect for getting annotation applied to a class, method or parameter.
  *
  * Examples:
  *
@@ -19,10 +19,10 @@ import java.lang.reflect.Parameter;
  *         .method("method1", Integer.class, String.class)
  *         .annotation(SomeAnnotation.class);
  *
- * For getting an argument level annotation:
+ * For getting a parameter level annotation:
  *     SomeAnnotation annotation = forClass(SomeClass.class)
  *         .method("method", Integer.class, String.class)
- *         .argument(0)
+ *         .parameter(0)
  *         .annotation(SomeAnnotation.class);
  */
 public final class AnnotationUtil {
