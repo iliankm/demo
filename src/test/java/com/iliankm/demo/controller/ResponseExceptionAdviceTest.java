@@ -7,7 +7,6 @@ import com.iliankm.demo.entity.Customer;
 import com.iliankm.demo.service.customer.CustomerService;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -18,7 +17,6 @@ import javax.validation.ValidationException;
 
 import static com.iliankm.demo.controller.Utils.asJsonString;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -34,8 +32,6 @@ class ResponseExceptionAdviceTest {
     @MockBean
     private CustomerService customerService;
     @MockBean
-    private ModelMapper modelMapper;
-    @MockBean
     private ConverterService converterService;
 
     @Autowired
@@ -46,7 +42,7 @@ class ResponseExceptionAdviceTest {
     void shouldMapValidationException() {
         // given
         given(customerService.save(any(Customer.class))).willThrow(ValidationException.class);
-        given(modelMapper.map(any(CreateUpdateCustomerDto.class), eq(Customer.class))).willReturn(new Customer());
+        given(converterService.convert(any(CreateUpdateCustomerDto.class), any(Customer.class))).willReturn(new Customer());
         var customerDto = CustomerDto.builder().id(1L);
 
         // when & then

@@ -80,6 +80,7 @@ class CustomerControllerTest {
         var customer = new Customer();
         customer.setId(1L);
         given(customerService.save(any(Customer.class))).willReturn(customer);
+        given(converterService.convert(any(CreateUpdateCustomerDto.class), any(Customer.class))).willReturn(customer);
         var customerDto = CustomerDto.builder().id(1L);
 
         // when & then
@@ -96,6 +97,7 @@ class CustomerControllerTest {
         var customer = new Customer();
         customer.setId(1L);
         given(customerService.findById(1L)).willReturn(Optional.of(customer));
+        given(converterService.convert(any(CreateUpdateCustomerDto.class), any(Customer.class))).willReturn(customer);
         given(customerService.save(customer)).willReturn(customer);
         var updateData = new CreateUpdateCustomerDto();
         updateData.setFirstName("John");

@@ -5,7 +5,6 @@ import com.iliankm.demo.dto.CreateUpdateCustomerDto;
 import com.iliankm.demo.dto.CustomerDto;
 import com.iliankm.demo.entity.Customer;
 import com.iliankm.demo.service.customer.CustomerService;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,19 +26,16 @@ import java.util.stream.Collectors;
 class CustomerController {
 
     private final CustomerService customerService;
-    private final ModelMapper modelMapper;
     private final ConverterService converterService;
 
     /**
      * Autowired constructor for DI.
      *
      * @param customerService  {@link CustomerService} dependency
-     * @param modelMapper      {@link ModelMapper} dependency
      * @param converterService {@link ConverterService} dependency
      */
-    CustomerController(CustomerService customerService, ModelMapper modelMapper, ConverterService converterService) {
+    CustomerController(CustomerService customerService, ConverterService converterService) {
         this.customerService = customerService;
-        this.modelMapper = modelMapper;
         this.converterService = converterService;
     }
 
@@ -77,7 +73,7 @@ class CustomerController {
     @PostMapping
     public ResponseEntity<Long> create(@RequestBody CreateUpdateCustomerDto createUpdateCustomerData) {
         return new ResponseEntity<>(
-                customerService.save(modelMapper.map(createUpdateCustomerData, Customer.class)).getId(),
+                customerService.save(converterService.convert(createUpdateCustomerData, new Customer())).getId(),
                 HttpStatus.CREATED);
     }
 
@@ -92,10 +88,7 @@ class CustomerController {
     public ResponseEntity<String> update(@PathVariable("id") Long customerId,
                                          @RequestBody CreateUpdateCustomerDto createUpdateCustomerData) {
         return customerService.findById(customerId)
-                .map(c -> {
-                    modelMapper.map(createUpdateCustomerData, c);
-                    return c;
-                })
+                .map(c -> converterService.convert(createUpdateCustomerData, c))
                 .map(customerService::save)
                 .map(c -> ResponseEntity.ok().body(String.format("Customer %s updated", customerId)))
                 .orElse(ResponseEntity.notFound().build());
