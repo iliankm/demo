@@ -3,6 +3,7 @@ package com.iliankm.demo.service.customer;
 import com.iliankm.demo.entity.Customer;
 import com.iliankm.demo.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +13,7 @@ import javax.transaction.Transactional;
  * Customer service implementation.
  */
 @Service
+@Validated
 class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
