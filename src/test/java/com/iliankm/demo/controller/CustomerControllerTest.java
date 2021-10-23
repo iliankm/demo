@@ -4,7 +4,8 @@ import com.iliankm.demo.configuration.ModelMapperConfiguration;
 import com.iliankm.demo.converter.api.ConverterService;
 import com.iliankm.demo.dto.CreateUpdateCustomerDto;
 import com.iliankm.demo.dto.CustomerDto;
-import com.iliankm.demo.entity.Customer;
+import com.iliankm.demo.entity.CustomerEntity;
+import com.iliankm.demo.service.customer.CustomerCreateUpdateData;
 import com.iliankm.demo.service.customer.CustomerService;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
@@ -20,10 +21,15 @@ import java.util.Optional;
 
 import static com.iliankm.demo.controller.Utils.asJsonString;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Test for {@link CustomerController}.
@@ -45,7 +51,7 @@ class CustomerControllerTest {
     @Test
     void shouldGetCustomerById() {
         // given
-        var customer = new Customer();
+        var customer = new CustomerEntity();
         customer.setId(1L);
         customer.setFirstName("John");
         customer.setLastName("Doe");
@@ -62,7 +68,7 @@ class CustomerControllerTest {
     @Test
     void shouldGetAll() {
         // given
-        var customer1 = new Customer();
+        var customer1 = new CustomerEntity();
         customer1.setId(1L);
         given(customerService.findAll()).willReturn(List.of(customer1));
         given(converterService.convert(customer1, CustomerDto.class)).willReturn(CustomerDto.builder().id(1L).build());
@@ -77,15 +83,18 @@ class CustomerControllerTest {
     @Test
     void shouldCreate() {
         // given
-        var customer = new Customer();
+        var customerCreateUpdateData = new CustomerCreateUpdateData("John", "Doe");
+        given(converterService.convert(any(CreateUpdateCustomerDto.class), eq(CustomerCreateUpdateData.class))).willReturn(customerCreateUpdateData);
+        var customer = new CustomerEntity();
         customer.setId(1L);
-        given(customerService.save(any(Customer.class))).willReturn(customer);
-        given(converterService.convert(any(CreateUpdateCustomerDto.class), any(Customer.class))).willReturn(customer);
-        var customerDto = CustomerDto.builder().id(1L);
+        given(customerService.create(customerCreateUpdateData)).willReturn(customer);
+        var createUpdateCustomerDto = new CreateUpdateCustomerDto();
+        createUpdateCustomerDto.setFirstName("John");
+        createUpdateCustomerDto.setLastName("Doe");
 
         // when & then
         mvc.perform(post("/api/v1/customers")
-                .content(asJsonString(customerDto)).contentType(APPLICATION_JSON))
+                .content(asJsonString(createUpdateCustomerDto)).contentType(APPLICATION_JSON))
                 .andExpect(status().isCreated())
                 .andExpect(content().string("1"));
     }
@@ -94,32 +103,19 @@ class CustomerControllerTest {
     @Test
     void shouldUpdate() {
         // given
-        var customer = new Customer();
+        var customerCreateUpdateData = new CustomerCreateUpdateData("John", "Doe");
+        given(converterService.convert(any(CreateUpdateCustomerDto.class), eq(CustomerCreateUpdateData.class))).willReturn(customerCreateUpdateData);
+        var customer = new CustomerEntity();
         customer.setId(1L);
-        given(customerService.findById(1L)).willReturn(Optional.of(customer));
-        given(converterService.convert(any(CreateUpdateCustomerDto.class), any(Customer.class))).willReturn(customer);
-        given(customerService.save(customer)).willReturn(customer);
-        var updateData = new CreateUpdateCustomerDto();
-        updateData.setFirstName("John");
+        given(customerService.update(1L, customerCreateUpdateData)).willReturn(customer);
+        var createUpdateCustomerDto = new CreateUpdateCustomerDto();
+        createUpdateCustomerDto.setFirstName("John");
+        createUpdateCustomerDto.setLastName("Doe");
+
         // when & then
         mvc.perform(put("/api/v1/customers/1")
-                        .content(asJsonString(updateData)).contentType(APPLICATION_JSON))
+                        .content(asJsonString(createUpdateCustomerDto)).contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Customer 1 updated"));
     }
-
-    @SneakyThrows
-    @Test
-    void shouldReturnNotFound() {
-        // given
-        given(customerService.findById(1L)).willReturn(Optional.empty());
-        var updateData = new CreateUpdateCustomerDto();
-        updateData.setFirstName("John");
-
-        // when & then
-        mvc.perform(put("/api/v1/customers/1")
-                        .content(asJsonString(updateData)).contentType(APPLICATION_JSON))
-                .andExpect(status().isNotFound());
-    }
-
 }

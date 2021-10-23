@@ -1,6 +1,6 @@
 package com.iliankm.demo.repository;
 
-import com.iliankm.demo.entity.Customer;
+import com.iliankm.demo.entity.CustomerEntity;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -51,9 +51,9 @@ class CustomerRepositoryTest {
 
     @ParameterizedTest
     @MethodSource("shouldFailValidationTestCases")
-    void shouldFailValidation(Customer customer) {
+    void shouldFailValidation(CustomerEntity customerEntity) {
         // given & when & then
-        assertThrows(ConstraintViolationException.class, () -> customerRepository.saveAndFlush(customer));
+        assertThrows(ConstraintViolationException.class, () -> customerRepository.saveAndFlush(customerEntity));
     }
 
     private static Stream<Arguments> shouldFailValidationTestCases() {
@@ -61,7 +61,7 @@ class CustomerRepositoryTest {
         Arrays.fill(longNameArr, 'A');
         final var longName = new String(longNameArr);
         return Stream.of(
-                Arguments.of(new Customer()),
+                Arguments.of(new CustomerEntity()),
                 Arguments.of(customer("", "Doe")),
                 Arguments.of(customer(" ", "Doe")),
                 Arguments.of(customer(null, "Doe")),
@@ -73,8 +73,8 @@ class CustomerRepositoryTest {
         );
     }
 
-    private static Customer customer(String firstName, String lastName) {
-        final var customer = new Customer();
+    private static CustomerEntity customer(String firstName, String lastName) {
+        final var customer = new CustomerEntity();
         customer.setFirstName(firstName);
         customer.setLastName(lastName);
         return customer;

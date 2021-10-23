@@ -1,7 +1,6 @@
 package com.iliankm.demo.converter;
 
 import com.iliankm.demo.dto.CreateUpdateCustomerDto;
-import com.iliankm.demo.entity.Customer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,28 +11,28 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 /**
- * Test for {@link CreateUpdateCustomerDtoToCustomerMergeConverter}.
+ * Test for {@link CreateUpdateCustomerDtoToCustomerCreateUpdateDataConverter}.
  */
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = CreateUpdateCustomerDtoToCustomerMergeConverter.class)
-class CreateUpdateCustomerDtoToCustomerMergeConverterTest {
+@ContextConfiguration(classes = CreateUpdateCustomerDtoToCustomerCreateUpdateDataConverter.class)
+class CreateUpdateCustomerDtoToCustomerCreateUpdateDataConverterTest {
 
     @Autowired
-    private CreateUpdateCustomerDtoToCustomerMergeConverter mergeConverter;
+    private CreateUpdateCustomerDtoToCustomerCreateUpdateDataConverter converter;
 
     @Test
     void shouldConvert() {
         // given
-        final var dto = new CreateUpdateCustomerDto();
+        var dto = new CreateUpdateCustomerDto();
         dto.setFirstName("John");
         dto.setLastName("Doe");
-        final var customer = new Customer();
 
         // when
-        mergeConverter.convert(dto, customer);
+        var createUpdateData = converter.convert(dto);
 
         // then
-        assertThat(customer.getFirstName(), is("John"));
-        assertThat(customer.getLastName(), is("Doe"));
+        assertThat(createUpdateData.getFirstName(), is("John"));
+        assertThat(createUpdateData.getLastName(), is("Doe"));
     }
+
 }

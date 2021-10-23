@@ -3,7 +3,7 @@ package com.iliankm.demo.controller;
 import com.iliankm.demo.converter.api.ConverterService;
 import com.iliankm.demo.dto.CreateUpdateCustomerDto;
 import com.iliankm.demo.dto.CustomerDto;
-import com.iliankm.demo.entity.Customer;
+import com.iliankm.demo.service.customer.CustomerCreateUpdateData;
 import com.iliankm.demo.service.customer.CustomerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -73,24 +73,24 @@ class CustomerController {
     @PostMapping
     public ResponseEntity<Long> create(@RequestBody CreateUpdateCustomerDto createUpdateCustomerData) {
         return new ResponseEntity<>(
-                customerService.save(converterService.convert(createUpdateCustomerData, new Customer())).getId(),
+                customerService.create(
+                        converterService.convert(createUpdateCustomerData, CustomerCreateUpdateData.class)).getId(),
                 HttpStatus.CREATED);
     }
 
     /**
      * Updates customer.
      *
-     * @param customerId               customer id
-     * @param createUpdateCustomerData customer update data
+     * @param customerId              customer id
+     * @param createUpdateCustomerDto customer update data dto
      * @return the id of the updated customer
      */
     @PutMapping("{id}")
     public ResponseEntity<String> update(@PathVariable("id") Long customerId,
-                                         @RequestBody CreateUpdateCustomerDto createUpdateCustomerData) {
-        return customerService.findById(customerId)
-                .map(c -> converterService.convert(createUpdateCustomerData, c))
-                .map(customerService::save)
-                .map(c -> ResponseEntity.ok().body(String.format("Customer %s updated", customerId)))
-                .orElse(ResponseEntity.notFound().build());
+                                         @RequestBody CreateUpdateCustomerDto createUpdateCustomerDto) {
+        var customerCreateUpdateData =
+                converterService.convert(createUpdateCustomerDto, CustomerCreateUpdateData.class);
+        customerService.update(customerId, customerCreateUpdateData);
+        return ResponseEntity.ok().body(String.format("Customer %s updated", customerId));
     }
 }

@@ -2,17 +2,17 @@ package com.iliankm.demo.converter;
 
 import com.iliankm.demo.converter.api.Converter;
 import com.iliankm.demo.dto.CustomerDto;
-import com.iliankm.demo.entity.Customer;
+import com.iliankm.demo.entity.CustomerEntity;
 import org.springframework.stereotype.Component;
 
 /**
- * Converter from {@link Customer} to {@link CustomerDto}.
+ * Converter from {@link CustomerEntity} to {@link CustomerDto}.
  */
 @Component
-class CustomerToCustomerDtoConverter implements Converter<Customer, CustomerDto> {
+class CustomerEntityToCustomerDtoConverter implements Converter<CustomerEntity, CustomerDto> {
 
     @Override
-    public CustomerDto convert(Customer source) {
+    public CustomerDto convert(CustomerEntity source) {
         return CustomerDto.builder()
                 .id(source.getId())
                 .firstName(source.getFirstName())

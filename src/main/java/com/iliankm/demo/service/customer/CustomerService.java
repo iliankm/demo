@@ -1,6 +1,5 @@
 package com.iliankm.demo.service.customer;
 
-import com.iliankm.demo.entity.Customer;
 import com.sun.istack.NotNull;
 
 import java.util.List;
@@ -28,10 +27,20 @@ public interface CustomerService {
     List<Customer> findAll();
 
     /**
-     * Saves new customer.
+     * Creates new customer.
      *
-     * @param customer customer to save
-     * @return saved customer
+     * @param createData customer create data
+     * @return created customer
      */
-    Customer save(@Valid Customer customer);
+    Customer create(@Valid CustomerCreateUpdateData createData);
+
+    /**
+     * Updates a customer.
+     *
+     * @param id customer's id
+     * @param updateData customer update data
+     * @return created customer
+     */
+    Customer update(@NotNull Long id, @Valid CustomerCreateUpdateData updateData);
+
 }

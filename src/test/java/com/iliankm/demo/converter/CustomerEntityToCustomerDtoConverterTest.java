@@ -1,7 +1,7 @@
 package com.iliankm.demo.converter;
 
 import com.iliankm.demo.dto.CustomerDto;
-import com.iliankm.demo.entity.Customer;
+import com.iliankm.demo.entity.CustomerEntity;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,25 +12,25 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 /**
- * Test for {@link CustomerToCustomerDtoConverter}.
+ * Test for {@link CustomerEntityToCustomerDtoConverter}.
  */
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {CustomerToCustomerDtoConverter.class})
-class CustomerToCustomerDtoConverterTest {
+@ContextConfiguration(classes = {CustomerEntityToCustomerDtoConverter.class})
+class CustomerEntityToCustomerDtoConverterTest {
 
     @Autowired
-    private CustomerToCustomerDtoConverter converter;
+    private CustomerEntityToCustomerDtoConverter converter;
 
     @Test
     void shouldConvert() {
         // given
-        Customer customer = new Customer();
-        customer.setId(1L);
-        customer.setFirstName("John");
-        customer.setLastName("Doe");
+        CustomerEntity customerEntity = new CustomerEntity();
+        customerEntity.setId(1L);
+        customerEntity.setFirstName("John");
+        customerEntity.setLastName("Doe");
 
         // when
-        CustomerDto customerDto = converter.convert(customer);
+        CustomerDto customerDto = converter.convert(customerEntity);
 
         // then
         assertThat(customerDto.getId(), is(1L));

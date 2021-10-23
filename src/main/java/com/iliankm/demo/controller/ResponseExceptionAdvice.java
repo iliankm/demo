@@ -1,5 +1,6 @@
 package com.iliankm.demo.controller;
 
+import com.iliankm.demo.exception.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,5 +22,15 @@ class ResponseExceptionAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<String> handleValidationException(ValidationException ex) {
         return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
+    /**
+     * Handles NotFoundException thrown by the service layer.
+     *
+     * @param ex the {@link NotFoundException}
+     */
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<String> handleNotFoundException(NotFoundException ex) {
+        return ResponseEntity.notFound().build();
     }
 }

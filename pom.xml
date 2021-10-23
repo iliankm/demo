@@ -127,6 +127,7 @@
                             <haltOnFailure>true</haltOnFailure>
                             <excludes>
                                 <exclude>**/dto/**</exclude>
+                                <exclude>**/exception/**</exclude>
                             </excludes>
                             <rules>
                                 <rule>

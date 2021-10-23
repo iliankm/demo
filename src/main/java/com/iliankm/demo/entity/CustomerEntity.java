@@ -1,5 +1,6 @@
 package com.iliankm.demo.entity;
 
+import com.iliankm.demo.service.customer.Customer;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,7 +12,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-
 /**
  * Customer JPA entity.
  */
@@ -19,7 +19,7 @@ import javax.validation.constraints.Size;
 @Table(name = "customer")
 @Getter
 @Setter
-public class Customer {
+public class CustomerEntity implements Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
