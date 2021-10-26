@@ -12,110 +12,103 @@ import java.util.function.Consumer;
  *
  * @param <T> the type of value
  */
-public interface Maybe<T> {
+public final class Maybe<T> {
+
+    private final T value;
+
+    private final boolean known;
+
+    private Maybe() {
+        this.known = false;
+        this.value = null;
+    }
+
+    private Maybe(T value) {
+        this.known = true;
+        this.value = value;
+    }
 
     /**
      * If the value is definite (known), returns the value, otherwise throws {@link NoSuchElementException}.
      *
      * @return the value that this container holds
      */
-    T get();
+    public T get() {
+        if (known) {
+            return value;
+        } else {
+            throw new NoSuchElementException("Unknown value.");
+        }
+    }
 
     /**
      * If the value is definite (known), returns true, otherwise false.
      *
      * @return true if value is definite (known), otherwise false
      */
-    boolean isKnown();
+    public boolean isKnown() {
+        return known;
+    }
 
     /**
      * If the container is definite (known), performs the given action with the value, otherwise does nothing.
      *
      * @param action the action to be performed, if the container is definite (known)
      */
-    default void ifKnown(Consumer<? super T> action) {
-        if (isKnown()) {
+    public void ifKnown(Consumer<? super T> action) {
+        if (known) {
             action.accept(get());
         }
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(value);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof Maybe)) {
+            return false;
+        }
+
+        Maybe<?> other = (Maybe<?>) obj;
+        return known == other.known && Objects.equals(value, other.value);
+    }
+
+    @Override
+    public String toString() {
+        return known ? "definitely -> " + (value != null ? value.toString() : "null") : "Unknown";
+    }
+
+    private static final Maybe<?> UNKNOWN = new Maybe<>();
+
+    private static final Maybe<?> DEFINITELY_NULL = new Maybe<>(null);
+
     /**
-     * Creates unknown Maybe instance.
+     * Returns unknown Maybe instance.
      *
      * @param <T> the type of value
      * @return unknown Maybe instance
      */
-    static <T> Maybe<T> unknown() {
-        return new Maybe<>() {
-            @Override
-            public T get() {
-                throw new NoSuchElementException("Unknown value.");
-            }
-
-            @Override
-            public boolean isKnown() {
-                return false;
-            }
-
-            @Override
-            public int hashCode() {
-                return super.hashCode();
-            }
-
-            @Override
-            public boolean equals(Object obj) {
-                return false;
-            }
-
-            @Override
-            public String toString() {
-                return "Unknown";
-            }
-        };
+    @SuppressWarnings("unchecked")
+    public static <T> Maybe<T> unknown() {
+        return (Maybe<T>) UNKNOWN;
     }
 
     /**
-     * Creates definite Maybe instance holding certain value.
+     * Creates definite Maybe instance holding certain value including null.
      *
      * @param value the value that the container will hold, might be null
      * @param <T> the type of value
      * @return definite Maybe instance holding the passed value
      */
-    static <T> Maybe<T> definitely(T value) {
-        return new Maybe<>() {
-            @Override
-            public T get() {
-                return value;
-            }
-
-            @Override
-            public boolean isKnown() {
-                return true;
-            }
-
-            @Override
-            public int hashCode() {
-                return Objects.hashCode(get());
-            }
-
-            @Override
-            public boolean equals(Object obj) {
-                if (this == obj) {
-                    return true;
-                }
-
-                if (!(obj instanceof Maybe)) {
-                    return false;
-                }
-
-                Maybe<?> other = (Maybe<?>) obj;
-                return other.isKnown() && Objects.equals(value, other.get());
-            }
-
-            @Override
-            public String toString() {
-                return "definitely " + (value != null ? value.toString() : "null");
-            }
-        };
+    @SuppressWarnings("unchecked")
+    public static <T> Maybe<T> definitely(T value) {
+        return value == null ? (Maybe<T>) DEFINITELY_NULL : new Maybe<>(value);
     }
 }
