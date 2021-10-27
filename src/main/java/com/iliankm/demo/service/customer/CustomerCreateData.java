@@ -7,11 +7,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 /**
- * Customer create / update data object.
+ * Create customer data object.
  */
 @RequiredArgsConstructor
 @Getter
-public class CustomerCreateUpdateData {
+public class CustomerCreateData {
 
     @NotBlank
     @Size(max = 100)

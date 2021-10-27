@@ -32,15 +32,14 @@ public interface CustomerService {
      * @param createData customer create data
      * @return created customer
      */
-    Customer create(@Valid CustomerCreateUpdateData createData);
+    Customer create(@Valid CustomerCreateData createData);
 
     /**
      * Updates a customer.
      *
-     * @param id customer's id
-     * @param updateData customer update data
-     * @return created customer
+     * @param customer the customer to update
+     * @return updated customer
      */
-    Customer update(@NotNull Long id, @Valid CustomerCreateUpdateData updateData);
+    Customer update(@Valid Customer customer);
 
 }

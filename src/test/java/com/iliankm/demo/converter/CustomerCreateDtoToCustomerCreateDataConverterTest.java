@@ -1,6 +1,6 @@
 package com.iliankm.demo.converter;
 
-import com.iliankm.demo.dto.CreateUpdateCustomerDto;
+import com.iliankm.demo.dto.CustomerCreateDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,28 +11,28 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 /**
- * Test for {@link CreateUpdateCustomerDtoToCustomerCreateUpdateDataConverter}.
+ * Test for {@link CustomerCreateDtoToCustomerCreateDataConverter}.
  */
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = CreateUpdateCustomerDtoToCustomerCreateUpdateDataConverter.class)
-class CreateUpdateCustomerDtoToCustomerCreateUpdateDataConverterTest {
+@ContextConfiguration(classes = CustomerCreateDtoToCustomerCreateDataConverter.class)
+class CustomerCreateDtoToCustomerCreateDataConverterTest {
 
     @Autowired
-    private CreateUpdateCustomerDtoToCustomerCreateUpdateDataConverter converter;
+    private CustomerCreateDtoToCustomerCreateDataConverter converter;
 
     @Test
     void shouldConvert() {
         // given
-        var dto = new CreateUpdateCustomerDto();
+        var dto = new CustomerCreateDto();
         dto.setFirstName("John");
         dto.setLastName("Doe");
 
         // when
-        var createUpdateData = converter.convert(dto);
+        var createData = converter.convert(dto);
 
         // then
-        assertThat(createUpdateData.getFirstName(), is("John"));
-        assertThat(createUpdateData.getLastName(), is("Doe"));
+        assertThat(createData.getFirstName(), is("John"));
+        assertThat(createData.getLastName(), is("Doe"));
     }
 
 }

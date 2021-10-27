@@ -1,9 +1,10 @@
 package com.iliankm.demo.controller;
 
 import com.iliankm.demo.converter.api.ConverterService;
-import com.iliankm.demo.dto.CreateUpdateCustomerDto;
+import com.iliankm.demo.dto.CustomerCreateDto;
 import com.iliankm.demo.dto.CustomerDto;
-import com.iliankm.demo.service.customer.CustomerCreateUpdateData;
+import com.iliankm.demo.dto.CustomerUpdateDto;
+import com.iliankm.demo.service.customer.CustomerCreateData;
 import com.iliankm.demo.service.customer.CustomerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,30 +68,31 @@ class CustomerController {
     /**
      * Creates customer resource.
      *
-     * @param createUpdateCustomerData customer resource creation data
+     * @param customerCreateDto customer resource creation data
      * @return the id of the created customer
      */
     @PostMapping
-    public ResponseEntity<Long> create(@RequestBody CreateUpdateCustomerDto createUpdateCustomerData) {
+    public ResponseEntity<Long> create(@RequestBody CustomerCreateDto customerCreateDto) {
         return new ResponseEntity<>(
                 customerService.create(
-                        converterService.convert(createUpdateCustomerData, CustomerCreateUpdateData.class)).getId(),
+                        converterService.convert(customerCreateDto, CustomerCreateData.class)).getId(),
                 HttpStatus.CREATED);
     }
 
     /**
      * Updates customer.
      *
-     * @param customerId              customer id
-     * @param createUpdateCustomerDto customer update data dto
+     * @param customerId        customer id
+     * @param customerUpdateDto customer update data dto
      * @return the id of the updated customer
      */
     @PutMapping("{id}")
     public ResponseEntity<String> update(@PathVariable("id") Long customerId,
-                                         @RequestBody CreateUpdateCustomerDto createUpdateCustomerDto) {
-        var customerCreateUpdateData =
-                converterService.convert(createUpdateCustomerDto, CustomerCreateUpdateData.class);
-        customerService.update(customerId, customerCreateUpdateData);
-        return ResponseEntity.ok().body(String.format("Customer %s updated", customerId));
+                                         @RequestBody CustomerUpdateDto customerUpdateDto) {
+        return customerService.findById(customerId)
+                .map(c -> converterService.convert(customerUpdateDto, c))
+                .map(customerService::update)
+                .map(c -> ResponseEntity.ok().body(String.format("Customer %s updated", customerId)))
+                .orElse(ResponseEntity.notFound().build());
     }
 }

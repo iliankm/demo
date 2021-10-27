@@ -47,7 +47,7 @@ class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public Customer create(CustomerCreateUpdateData createData) {
+    public Customer create(CustomerCreateData createData) {
         var customerEntity = new CustomerEntity();
         converterService.convert(createData, customerEntity);
         return customerRepository.save(customerEntity);
@@ -55,10 +55,7 @@ class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public Customer update(Long id, CustomerCreateUpdateData updateData) {
-        var customerEntity = customerRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Customer with id: " + id + " was not found."));
-        converterService.convert(updateData, customerEntity);
-        return customerRepository.save(customerEntity);
+    public Customer update(Customer customer) {
+        return customerRepository.save((CustomerEntity) customer);
     }
 }

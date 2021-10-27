@@ -2,7 +2,6 @@ package com.iliankm.demo.service.customer;
 
 import com.iliankm.demo.converter.api.ConverterService;
 import com.iliankm.demo.entity.CustomerEntity;
-import com.iliankm.demo.exception.NotFoundException;
 import com.iliankm.demo.repository.CustomerRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +19,6 @@ import javax.validation.Valid;
 import static com.iliankm.demo.util.AnnotationUtil.forClass;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.BDDMockito.any;
@@ -73,11 +71,11 @@ class CustomerServiceImplTest {
         // given
         CustomerEntity created = customer(3L, "John", "Doe");
         given(customerRepository.save(any(CustomerEntity.class))).willReturn(created);
-        var createUpdateData = new CustomerCreateUpdateData("John", "Doe");
-        given(converterService.convert(createUpdateData, created)).willReturn(created);
+        var createData = new CustomerCreateData("John", "Doe");
+        given(converterService.convert(createData, created)).willReturn(created);
 
         // when
-        Customer result = customerService.create(createUpdateData);
+        Customer result = customerService.create(createData);
 
         // then
         assertThat(result, is(created));
@@ -86,26 +84,14 @@ class CustomerServiceImplTest {
     @Test
     void shouldUpdate() {
         // given
-        var customerEntity = new CustomerEntity();
-        given(customerRepository.findById(1L)).willReturn(Optional.of(customerEntity));
-        var createUpdateData = new CustomerCreateUpdateData("John", "Doe");
-        given(converterService.convert(createUpdateData, customerEntity)).willReturn(customerEntity);
-        given(customerRepository.save(customerEntity)).willReturn(customerEntity);
+        var customer = new CustomerEntity();
+        given(customerRepository.save(customer)).willReturn(customer);
 
         // when
-        var result = customerService.update(1L, createUpdateData);
+        var result = customerService.update(customer);
 
         // then
-        assertThat(result, is(customerEntity));
-    }
-
-    @Test
-    void shouldUpdateThrowNotFoundException() {
-        // given
-        given(customerRepository.findById(1L)).willReturn(Optional.empty());
-
-        // when & then
-        assertThrows(NotFoundException.class, () -> customerService.update(1L, new CustomerCreateUpdateData("John", "Doe")));
+        assertThat(result, is(customer));
     }
 
     @Test
@@ -122,7 +108,7 @@ class CustomerServiceImplTest {
     void createMethodShouldHaveTransactionalAnnotation() {
         // given & when
         Transactional transactional = forClass(CustomerServiceImpl.class)
-                .method("create", CustomerCreateUpdateData.class)
+                .method("create", CustomerCreateData.class)
                 .annotation(Transactional.class);
 
         // then
@@ -133,7 +119,7 @@ class CustomerServiceImplTest {
     void createMethodShouldHaveValidAnnotationOnTheArgument() {
         // given & when
         Valid valid = forClass(CustomerService.class)
-                .method("create", CustomerCreateUpdateData.class)
+                .method("create", CustomerCreateData.class)
                 .parameter(0)
                 .annotation(Valid.class);
 
