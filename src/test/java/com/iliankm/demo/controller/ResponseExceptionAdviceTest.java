@@ -50,7 +50,8 @@ class ResponseExceptionAdviceTest {
         // given
         given(customerService.create(any(CustomerCreateData.class))).willThrow(ValidationException.class);
         given(converterService.convert(any(CustomerCreateDto.class), eq(CustomerCreateData.class))).willReturn(new CustomerCreateData("", ""));
-        var customerDto = CustomerDto.builder().id(1L);
+        var customerDto = new CustomerDto();
+        customerDto.setId(1L);
 
         // when & then
         mvc.perform(post("/api/v1/customers")

@@ -13,10 +13,11 @@ class CustomerEntityToCustomerDtoConverter implements Converter<CustomerEntity, 
 
     @Override
     public CustomerDto convert(CustomerEntity source) {
-        return CustomerDto.builder()
-                .id(source.getId())
-                .firstName(source.getFirstName())
-                .lastName(source.getLastName())
-                .build();
+        final var customerDto = new CustomerDto();
+        customerDto.setId(source.getId());
+        customerDto.setFirstName(source.getFirstName());
+        customerDto.setLastName(source.getLastName());
+
+        return customerDto;
     }
 }

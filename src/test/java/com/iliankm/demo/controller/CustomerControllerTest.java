@@ -59,7 +59,9 @@ class CustomerControllerTest {
         customer.setFirstName("John");
         customer.setLastName("Doe");
         given(customerService.findById(1L)).willReturn(Optional.of(customer));
-        given(converterService.convert(customer, CustomerDto.class)).willReturn(CustomerDto.builder().id(1L).build());
+        var customerDto = new CustomerDto();
+        customerDto.setId(1L);
+        given(converterService.convert(customer, CustomerDto.class)).willReturn(customerDto);
 
         // when & then
         mvc.perform(get("/api/v1/customers/1"))
@@ -74,7 +76,9 @@ class CustomerControllerTest {
         var customer1 = new CustomerEntity();
         customer1.setId(1L);
         given(customerService.findAll()).willReturn(List.of(customer1));
-        given(converterService.convert(customer1, CustomerDto.class)).willReturn(CustomerDto.builder().id(1L).build());
+        var customerDto = new CustomerDto();
+        customerDto.setId(1L);
+        given(converterService.convert(customer1, CustomerDto.class)).willReturn(customerDto);
 
         // when & then
         mvc.perform(get("/api/v1/customers"))

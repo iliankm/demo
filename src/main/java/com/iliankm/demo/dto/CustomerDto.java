@@ -1,16 +1,13 @@
 package com.iliankm.demo.dto;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
 /**
  * DTO for customer resource.
  */
-@Getter
-@Builder
+@Data
 public class CustomerDto {
     private Long id;
     private String firstName;
     private String lastName;
-
 }

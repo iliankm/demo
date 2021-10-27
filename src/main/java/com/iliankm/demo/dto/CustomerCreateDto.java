@@ -1,14 +1,11 @@
 package com.iliankm.demo.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.openapitools.jackson.nullable.JsonNullable;
+import lombok.Data;
 
 /**
  * Create / update data for customer resource.
  */
-@Getter
-@Setter
+@Data
 public class CustomerCreateDto {
     private String firstName;
     private String lastName;
