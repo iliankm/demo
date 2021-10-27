@@ -11,6 +11,7 @@ import com.iliankm.demo.service.customer.CustomerCreateData;
 import com.iliankm.demo.service.customer.CustomerService;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -109,7 +110,8 @@ class CustomerControllerTest {
         given(customerService.findById(1L)).willReturn(Optional.of(customer));
         given(converterService.convert(any(CustomerUpdateDto.class), eq(customer))).willReturn(customer);
         given(customerService.update(customer)).willReturn(customer);
-        var customerUpdateData = new CustomerCreateDto();
+        var customerUpdateData = new CustomerUpdateDto();
+        customerUpdateData.setFirstName(JsonNullable.of("John"));
 
         // when & then
         mvc.perform(put("/api/v1/customers/1")

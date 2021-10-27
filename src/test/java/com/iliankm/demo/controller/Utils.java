@@ -2,16 +2,16 @@ package com.iliankm.demo.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.iliankm.demo.configuration.ObjectMapperConfiguration;
 
 /**
  * Utilities for controller tests.
  */
 final class Utils {
 
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    static {
-        OBJECT_MAPPER.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-    }
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapperConfiguration()
+            .objectMapper()
+            .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 
     private Utils() {
     }
