@@ -2,7 +2,6 @@ package com.iliankm.demo.service.customer;
 
 import com.iliankm.demo.converter.api.ConverterService;
 import com.iliankm.demo.entity.CustomerEntity;
-import com.iliankm.demo.exception.NotFoundException;
 import com.iliankm.demo.repository.CustomerRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
