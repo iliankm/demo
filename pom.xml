@@ -19,6 +19,8 @@
         <checksyle-maven-plugin.version>3.1.2</checksyle-maven-plugin.version>
         <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
         <jackson-databind-nullable.version>0.2.1</jackson-databind-nullable.version>
+        <image.tag>${project.version}</image.tag>
+        <spring-boot.build-image.imageName>ikm/demo:${image.tag}</spring-boot.build-image.imageName>
     </properties>
     <dependencies>
         <dependency>
@@ -73,6 +75,21 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>build-docker-image</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build-image</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
                 </configuration>
             </plugin>
             <plugin>
