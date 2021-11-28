@@ -20,7 +20,7 @@
         <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
         <jackson-databind-nullable.version>0.2.1</jackson-databind-nullable.version>
         <image.tag>${project.version}</image.tag>
-        <spring-boot.build-image.imageName>ikm/demo:${image.tag}</spring-boot.build-image.imageName>
+        <spring-boot.build-image.imageName>ikm/${project.name}:${image.tag}</spring-boot.build-image.imageName>
     </properties>
     <dependencies>
         <dependency>
