@@ -58,8 +58,8 @@ class ConverterServiceImpl implements ConverterService {
         if (converter != null) {
             return (T) converter;
         } else {
-            throw new IllegalArgumentException("No implementation found for Converter or MergeConverter from "
-                    + sourceClass.getName() + " to " + destinationClass.getName());
+            throw new IllegalArgumentException("No implementation found for Converter or MergeConverter from " +
+                    sourceClass.getName() + " to " + destinationClass.getName());
         }
     }
 }
